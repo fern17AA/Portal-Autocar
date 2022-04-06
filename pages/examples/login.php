@@ -1,3 +1,38 @@
+<?php
+include("../../conexion/conexion.php");
+
+$db = new Conexion();
+
+extract($_POST);
+$entrar = "";
+@$email = $_POST['email'];
+@$clave = md5($_POST['clave']);
+
+if($_POST){
+  
+  $sql_usuarios = $db->query("select * from usuarios where clave = '".$clave."' AND email = '".$email."' ");
+  $array_usuarios = $sql_usuarios->fetch_array();
+  
+  if($array_usuarios['id'] == ""){
+    ?>
+        <script language="javascript">
+      alert("Email o clave no valida");
+    </script>
+        <?php
+  }else{
+    
+      session_start();
+      $_SESSION['id'] = $array_usuarios['id'];
+      ?>
+        <script language="javascript">
+          window.location="../../vistas/index.php";
+        </script>
+      <?php
+    
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,19 +63,19 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>Autocar</b>Cancún</a>
+    <a href="#s"><b>Autocar</b>Cancún</a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Inicia sesión para poder acceder</p>
 
-    <form action="../../index2.html" method="post">
+    <form method="post">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" placeholder="Correo">
+        <input type="text" name="email" class="form-control" placeholder="Correo" autocomplete="off" required>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Contraseña">
+        <input type="password" name="clave" class="form-control" placeholder="Contraseña">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
